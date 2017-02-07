@@ -1,7 +1,6 @@
 require "json"
 require "net/http"
 require "uri"
-require "openssl"
 
 module Embulk
   module Filter
@@ -39,7 +38,6 @@ module Embulk
         @uri.query = URI.encode_www_form(task['params'])
         @http = Net::HTTP.new(@uri.host, @uri.port)
         @http.use_ssl = true
-        @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
         @request = Net::HTTP::Post.new(@uri.request_uri)
         @request['Content-Type'] = 'application/json'
         @request['Ocp-Apim-Subscription-Key'] = task['subscription_key']
@@ -76,16 +74,17 @@ module Embulk
 
       private
       def proc_records(records)
-        documents = []
+        documents = {}
         records.each do |record|
           document = {}
+          uuid = SecureRandom.uuid
           document["language"] = @language if @language
-          document["id"] = SecureRandom.uuid
+          document["id"] = uuid
           document["text"] = record[@key_name]
-          documents << document
+          documents[uuid] = document
         end
 
-        @request.body = @body_params.merge({ documents: documents }).to_json
+        @request.body = @body_params.merge({ documents: documents.values }).to_json
         Embulk.logger.debug "request body => #{@request.body}"
         response_hash = @http.start do |h|
           response = h.request(@request)
