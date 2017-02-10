@@ -68,6 +68,21 @@ Azure Text Analytics filter plugin for Embulk.
     subscription_key: XXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
+### keyPhrases
+
+```yaml
+    # en,es,fr,pt
+  - type: azure_text_analytics_topics
+    out_key_name: _parsed
+    key_name: pr
+    params:
+      minDocumentsPerWord: 3
+      maxDocumentsPerWord: 10
+    subscription_key: {{ env.AZURE_TEXT_SUBSCRIPTION_KEY }}
+
+```
+* required, over 100 documents.
+
 ## Build
 
 ```

@@ -23,6 +23,10 @@ module Embulk
           "subscription_key" => config.param("subscription_key", :string),
         }
 
+        if task['api_type'] == 'topics'
+          raise ConfigError.new "Not support type topics API. use azure_text_analytics_topics."
+        end
+
         add_columns = [
           Column.new(nil, task["out_key_name"], :json)
         ]
