@@ -28,7 +28,6 @@ Azure Text Analytics filter plugin for Embulk.
 ### sentiment
 
 ```yaml
-  # en,es,fr,pt
   - type: azure_text_analytics
     api_type: sentiment
     key_name: target_key
@@ -71,7 +70,11 @@ Azure Text Analytics filter plugin for Embulk.
 ### keyPhrases
 
 ```yaml
-    # en,es,fr,pt
+exec:
+  max_threads: 1
+  min_output_tasks: 1
+
+filters:
   - type: azure_text_analytics_topics
     out_key_name: _parsed
     key_name: pr
@@ -82,6 +85,7 @@ Azure Text Analytics filter plugin for Embulk.
 
 ```
 * required, over 100 documents.
+* en,es,fr,pt support
 
 ## Build
 
