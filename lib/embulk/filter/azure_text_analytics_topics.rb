@@ -102,6 +102,9 @@ module Embulk
         response_hash = @http.start do |h|
           @operation_location ? proc_topics(h, @operation_location) : proc_http(h)
         end
+        if response_hash.key?('innerError')
+          raise "ERROR => #{response_hash}"
+        end
         topics = response_hash["operationProcessingResult"]["topics"]
         topics_assignments = response_hash["operationProcessingResult"]["topicAssignments"]
 
